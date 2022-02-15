@@ -1,0 +1,23 @@
+﻿@page "/severitys/edit/{id:int}"
+@inject HttpClient _client
+@inject NavigationManager _navManager  
+
+<h3>Edit Severity</h3>
+
+<FormComponent ButtonText="Update" OnValidSubmit="EditSeverity" severity="severity" />
+
+@code {
+        [Parameter] public int id { get; set; }
+        Severity severity = new Severity();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        severity = await _client.GetFromJsonAsync<Severity>($"{Endpoints.SeveritysEndpoint}/{id}");
+    }
+
+    async Task EditSeverity()
+    {
+        await _client.PutAsJsonAsync($"{Endpoints.SeveritysEndpoint}/{id}", severity);
+        _navManager.NavigateTo("/severitys/");
+    }
+}

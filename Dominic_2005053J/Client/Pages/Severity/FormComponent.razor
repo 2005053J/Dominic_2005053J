@@ -1,0 +1,23 @@
+﻿<EditForm Model="@severity" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Type: </label>
+        <div>
+            <InputText @bind-Value="@severity.Type" class="form-control" />
+            <ValidationMessage For="@(() => severity.Type)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-block">
+        @ButtonText
+    </button>
+
+</EditForm>
+
+@code {
+    [Parameter] public Severity severity { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}

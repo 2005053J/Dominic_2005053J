@@ -1,0 +1,46 @@
+﻿@page "/severitys/create/"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3 class="card-title">Create New Severitys</h3>
+<hr />
+<br />
+
+<EditForm Model="@severity" OnValidSubmit="CreateSeverity">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Type: </label>
+        <div>
+            <InputText @bind-Value="@severity.Type" class="form-control" />
+            <ValidationMessage For="@(() => severity.Type)" />
+        </div>
+    </div>
+
+<button type="submit" class="btn btn-success btn-block">
+    Create Severity
+</button>
+</EditForm>
+
+@code {
+    Severity severity = new Severity();
+
+    private IList<Payment> Payments;
+    private IList<Severity> Severitys;
+    private IList<Duration> Durations;
+
+    protected async override Task OnInitializedAsync()
+    {
+        Severitys = await _client.GetFromJsonAsync<List<Severity>>($"{Endpoints.SeveritysEndpoint}");
+        Payments = await _client.GetFromJsonAsync<List<Payment>>($"{Endpoints.PaymentsEndpoint}");
+        Durations = await _client.GetFromJsonAsync<List<Duration>>($"{Endpoints.DurationsEndpoint}");
+    }
+
+    private async Task CreateSeverity()
+    {
+        await _client.PostAsJsonAsync(Endpoints.SeveritysEndpoint, severity);
+        _navManager.NavigateTo("/severitys/");
+    }
+
+}
